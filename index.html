@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Assistente</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#e2362e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Assistente">
+<style>
+  html,body{ margin:0; padding:0; height:100%; background:#faf9f6; overflow:hidden; }
+  #app-frame{ position:fixed; top:0; left:0; width:100%; height:100%; border:0; display:block; }
+
+  #splash{
+    position:fixed; inset:0; background:#faf9f6; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px; transition:opacity .4s ease;
+    font-family:system-ui,sans-serif;
+  }
+  #splash.hide{ opacity:0; pointer-events:none; }
+  #splash svg{ width:72px; height:72px; border-radius:16px; }
+  #splash p{ color:#74706a; font-size:13px; margin:0; }
+
+  #fallback{
+    position:fixed; left:0; right:0; bottom:0; background:#fbe6e4; color:#c32a23;
+    font-family:system-ui,sans-serif; font-size:13px; padding:12px 16px; text-align:center; display:none;
+  }
+  #fallback a{ color:#c32a23; font-weight:600; text-decoration:underline; }
+</style>
+</head>
+<body>
+
+  <!-- ====== CONFIGURAÇÃO: cole aqui a URL do app da web do Apps Script ====== -->
+  <iframe id="app-frame" title="Assistente" src="https://script.google.com/macros/s/AKfycbznLiKyWOtYln11ZBOIDp2MwXCGZM2Z3a0yL18SJNfV1yegDP6q7-9Bo6XvBObTgkHIBw/exec"></iframe>
+
+  <div id="splash">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="200" rx="44" fill="#e2362e"/>
+      <path d="M70,150 L100,55 L130,150" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="82" y1="118" x2="118" y2="118" stroke="#fff" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="100" cy="36" r="9" fill="#fff"/>
+    </svg>
+    <p>Carregando Assistente…</p>
+  </div>
+
+  <div id="fallback">
+    Demorando demais? <a id="fallback-link" href="https://script.google.com/macros/s/AKfycbznLiKyWOtYln11ZBOIDp2MwXCGZM2Z3a0yL18SJNfV1yegDP6q7-9Bo6XvBObTgkHIBw/exec" target="_blank">Abrir em uma aba nova</a>
+  </div>
+
+<script>
+  const frame = document.getElementById('app-frame');
+  const splash = document.getElementById('splash');
+  const fallback = document.getElementById('fallback');
+
+  frame.addEventListener('load', function(){ splash.classList.add('hide'); });
+
+  // se em 6s o frame não carregou, mostra a opção de abrir em aba nova
+  setTimeout(function(){
+    if(!splash.classList.contains('hide')) fallback.style.display = 'block';
+  }, 6000);
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</body>
+</html>
